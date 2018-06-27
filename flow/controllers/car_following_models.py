@@ -386,7 +386,8 @@ class IDMController(BaseController):
             s_star = \
                 self.s0 + max([0, this_vel*self.T + this_vel*(this_vel-lead_vel)
                                / (2 * np.sqrt(self.a * self.b))])
-
+        #print("veh %s"%self.veh_id)
+        #print(self.a * (1 - (this_vel/self.v0)**self.delta - (s_star/h)**2))
         return self.a * (1 - (this_vel/self.v0)**self.delta - (s_star/h)**2)
 
     def reset_delay(self, env):

@@ -1,6 +1,6 @@
 import logging
 import datetime
-
+import traci
 
 class SumoExperiment():
 
@@ -49,4 +49,6 @@ class SumoExperiment():
             self.env.reset()
             for j in range(num_steps):
                 self.env.step(rl_actions)
+                #if vehID in traci.vehicle.getIDList():
+                #traci.vehicle.getSpeed()
         self.env.terminate()

@@ -43,6 +43,7 @@ class IntersectionEnvironment(SumoEnvironment):
             return self.find_intersection_dist(veh_ids)
 
     def find_intersection_dist(self, veh_id):
+        #print(veh_id)
         this_pos = self.get_x_by_id(veh_id)
 
         if not self.scenario.intersection_edgestarts:
@@ -51,11 +52,13 @@ class IntersectionEnvironment(SumoEnvironment):
         dist = []
         intersection = []
         for intersection_tuple in self.scenario.intersection_edgestarts:
-            dist.append((intersection_tuple[1] - this_pos))
+            #dist.append((intersection_tuple[1] - this_pos))
+            xPosition = self.traci_connection.vehicle.getLanePosition(veh_id)
+            dist.append(1480 - xPosition)
             intersection.append(intersection_tuple[0])
 
         ind = np.argmin(np.abs(dist))
-
+        #print ("--------------------------")
         return dist[ind], intersection[ind]
 
     def sort_by_intersection_dist(self):

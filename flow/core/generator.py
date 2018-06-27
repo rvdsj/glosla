@@ -63,11 +63,11 @@ class Generator(Serializable):
 
         # collect the attributes of each edge
         edges = self.specify_edges(net_params)
-
         # xml file for edges
         x = makexml("edges", "http://sumo.dlr.de/xsd/edges_file.xsd")
         for edge_attributes in edges:
             x.append(E("edge", attrib=edge_attributes))
+
         printxml(x, self.net_path + edgfn)
 
         # specify the types attributes (default is None)
@@ -169,6 +169,26 @@ class Generator(Serializable):
                 add.append(self._rerouter(rerouting_params["name"],
                                           rerouting_params["from"],
                                           rerouting_params["route"]))
+        """
+        tlLogic = E("tlLogic",id="center", programID="0" , offset = "0", type = "static")
+        phrase = E("phase", duration="33" , state="GGGgrrrrGGGgrrrr" )
+        phrase1 = E("phase", duration="3", state="yyygrrrryyygrrrr")
+        phrase2 = E("phase", duration="6", state="rrrGrrrrrrrGrrrr")
+        phrase3 = E("phase", duration="3", state="rrryrrrrrrryrrrr")
+        phrase4 = E("phase", duration="33", state="rrrrGGGgrrrrGGGg")
+        phrase5 = E("phase", duration="3", state="rrrryyygrrrryyyg")
+        phrase6 = E("phase", duration="6", state="rrrrrrrGrrrrrrrG")
+        phrase7 = E("phase", duration="3", state="rrrrrrryrrrrrrry")
+        tlLogic.append(phrase)
+        tlLogic.append(phrase1)
+        tlLogic.append(phrase2)
+        tlLogic.append(phrase3)
+        tlLogic.append(phrase4)
+        tlLogic.append(phrase5)
+        tlLogic.append(phrase6)
+        tlLogic.append(phrase7)
+        add.append(tlLogic)
+        """
 
         printxml(add, self.cfg_path + addfn)
 
@@ -398,6 +418,7 @@ class Generator(Serializable):
                 inp.append(E("gui-settings-file", value="%s.gui.xml" % name))
             else:
                 inp.append(E("gui-settings-file", value=gui))
+        inp.append(E("seed", value="256536"))
         return inp
 
     def _rerouter(self, name, frm, to):

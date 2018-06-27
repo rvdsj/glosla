@@ -7,8 +7,8 @@ Variables:
     type_params {dict} -- [Types of cars in the system. 
     Format {"name": (number, (Model, {params}), (Lane Change Model, {params}), initial_speed)}]
     env_params {dict} -- [Params for reward function]
-    net_params {dict} -- [Params for network.
                             length: road length
+    net_params {dict} -- [Params for network.
                             lanes
                             speed limit
                             resolution: number of edges comprising ring

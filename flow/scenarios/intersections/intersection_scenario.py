@@ -13,7 +13,6 @@ class TwoWayIntersectionScenario(Scenario):
         Initializes a two-way intersection scenario. Required net_params: horizontal_length_before,
         horizontal_length_after, horizontal_lanes, vertical_length_before, vertical_length_after, vertical_lanes,
         speed_limit. Required initial_config: positions.
-
         See Scenario.py for description of params.
         """
         self.left_len = net_params.additional_params["horizontal_length_in"]
@@ -80,9 +79,9 @@ class TwoWayIntersectionScenario(Scenario):
     def gen_custom_start_pos(self, initial_config, **kwargs):
         """
         Generate random positions starting from the ends of the track.
-        Vehicles are spaced so that no car can arrive at the 
+        Vehicles are spaced so that no car can arrive at the
         control portion of the track more often than...
-        :return: list of start positions [(edge0, pos0), (edge1, pos1), ...]    
+        :return: list of start positions [(edge0, pos0), (edge1, pos1), ...]
         """
         rate = initial_config.additional_params["intensity"]
         v_enter = initial_config.additional_params["enter_speed"]

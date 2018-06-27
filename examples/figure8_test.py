@@ -52,6 +52,6 @@ exp = SumoExperiment(env, scenario)
 
 logging.info("Experiment Set Up complete")
 
-exp.run(1, 1500)
+exp.run(1, 3000)
 
 exp.env.terminate()

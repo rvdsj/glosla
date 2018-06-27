@@ -1,5 +1,4 @@
 ''' Basic test of fully rl intersection environment with accelerations as actions. Two lane. Fully rl.
-
 Variables:
     sumo_params {dict} -- [Pass time step, whether safe mode is on or off
                                     human_lc: strategic -> all advantageous lane changes made
@@ -47,15 +46,15 @@ def run_task(*_):
                              sumo_binary="sumo-gui")
 
     vehicles = Vehicles()
-    vehicles.add_vehicles("idm", (RLController, {}), None, None, 0, 20)
+    vehicles.add_vehicles("idm", (RLController, {}), None, None, 0, 30)
 
     intensity = .2
     v_enter = 10
     env_params = EnvParams(additional_params={"target_velocity": v_enter,
                                               "control-length": 150, "max_speed": v_enter})
 
-    additional_net_params = {"horizontal_length_in": 400, "horizontal_length_out": 800, "horizontal_lanes": 1,
-                             "vertical_length_in": 400, "vertical_length_out": 800, "vertical_lanes": 1,
+    additional_net_params = {"horizontal_length_in": 500, "horizontal_length_out": 500, "horizontal_lanes": 2,
+                             "vertical_length_in": 500, "vertical_length_out": 500, "vertical_lanes": 2,
                              "speed_limit": {"horizontal": v_enter, "vertical": v_enter}}
     net_params = NetParams(no_internal_links=False, additional_params=additional_net_params)
 
@@ -114,4 +113,4 @@ for seed in [1]: # [1, 5, 10, 73, 56]
         exp_prefix="intersection-exp",
         # python_command=flow_config.PYTHON_COMMAND
         # plot=True,
-    )
+)

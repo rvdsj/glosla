@@ -1,6 +1,5 @@
 """
 This script presents the use of two-way intersections in flow.
-
 Cars enter from the bottom and left nodes following a probability distribution, and
 continue to move straight until they exit through the top and right nodes, respectively.
 """
@@ -29,8 +28,8 @@ v_enter = 10
 env_params = EnvParams(additional_params={"target_velocity": v_enter, "max-deacc": -6, "max-acc": 3,
                                           "control-length": 150, "max_speed": v_enter})
 
-additional_net_params = {"horizontal_length_in": 400, "horizontal_length_out": 10, "horizontal_lanes": 1,
-                         "vertical_length_in": 400, "vertical_length_out": 10, "vertical_lanes": 1,
+additional_net_params = {"horizontal_length_in": 1500, "horizontal_length_out": 1500, "horizontal_lanes": 2,
+                         "vertical_length_in": 1500, "vertical_length_out": 1500, "vertical_lanes": 2,
                          "speed_limit": {"horizontal": 30, "vertical": 30}}
 net_params = NetParams(no_internal_links=False, additional_params=additional_net_params)
 
@@ -50,4 +49,3 @@ logging.info("Experiment Set Up complete")
 exp.run(1, 1500)
 
 exp.env.terminate()
-

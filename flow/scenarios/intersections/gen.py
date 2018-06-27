@@ -70,7 +70,8 @@ class TwoWayIntersectionGenerator(Generator):
                  {"id": "bottom", "type": "vertical", "priority": "78",
                   "from": "bottom", "to": "center", "length": repr(vert_length_in)},
                  {"id": "top", "type": "vertical", "priority": "78",
-                  "from": "center", "to": "top", "length": repr(vert_length_out)}]
+                  "from": "center", "to": "top", "length": repr(vert_length_out)},
+                 ]
 
         return edges
 

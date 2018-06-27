@@ -207,6 +207,7 @@ class SumoEnvironment(gym.Env, Serializable):
                                                    self.colors[veh_type])
 
             # add the initial states to the vehicles class
+            #print("setting edge=%s for veh %s"%(self.traci_connection.vehicle.getRoadID(veh_id), veh_id))
             self.vehicles.set_edge(
                 veh_id, self.traci_connection.vehicle.getRoadID(veh_id))
             self.vehicles.set_position(
@@ -215,6 +216,8 @@ class SumoEnvironment(gym.Env, Serializable):
                 veh_id, self.traci_connection.vehicle.getLaneIndex(veh_id))
             self.vehicles.set_speed(
                 veh_id, self.traci_connection.vehicle.getSpeed(veh_id))
+
+            print (self.vehicles.get_edge(veh_id))
             self.vehicles.set_route(
                 veh_id, self.available_routes[self.vehicles.get_edge(veh_id)])
             self.vehicles.set_absolute_position(
@@ -340,8 +343,8 @@ class SumoEnvironment(gym.Env, Serializable):
                     new_lane = \
                         self.vehicles.get_lane_changing_controller(
                             veh_id).get_action(self)
-                    self.apply_lane_change([veh_id], target_lane=[new_lane])
 
+                    self.apply_lane_change([veh_id], target_lane=[new_lane])
             self.apply_acceleration(self.controlled_ids, acc=accel)
 
         # perform (optionally) lane change actions for sumo-controlled
@@ -365,7 +368,6 @@ class SumoEnvironment(gym.Env, Serializable):
                 routing_ids.append(veh_id)
                 route_contr = self.vehicles.get_routing_controller(veh_id)
                 routing_actions.append(route_contr.choose_route(self))
-
         self.choose_routes(veh_ids=routing_ids, route_choices=routing_actions)
 
         self.apply_rl_actions(rl_actions)
@@ -397,7 +399,10 @@ class SumoEnvironment(gym.Env, Serializable):
                 veh_id, network_observations[veh_id][tc.VAR_SPEED])
 
             try:
-                change = self.get_x_by_id(veh_id) - prev_pos
+                try:
+                    change = self.get_x_by_id(veh_id) - prev_pos
+                except:
+                    print(veh_id, prev_pos, self.vehicles.get_edge(veh_id), self.vehicles.get_position(veh_id))
                 if change < 0:
                     change += self.scenario.length
                 new_abs_pos = self.vehicles.get_absolute_position(
@@ -445,7 +450,8 @@ class SumoEnvironment(gym.Env, Serializable):
         # collect observation new state associated with action
 
         next_observation = list(self.state)
-
+        #print (self.state)
+        #print("---------------------")
         # crash encodes whether sumo experienced a crash
         crash = \
             crash \
@@ -684,6 +690,7 @@ class SumoEnvironment(gym.Env, Serializable):
                     safe_acc = acc[i]
 
             if self.multi_agent and (veh_id in self.rl_ids):
+
                 acc[i][0] = safe_acc
             else:
                 acc[i] = safe_acc
@@ -700,7 +707,9 @@ class SumoEnvironment(gym.Env, Serializable):
         actual_next_vel = requested_next_vel.clip(min=0)
 
         for i, vid in enumerate(veh_ids):
-            self.traci_connection.vehicle.slowDown(vid, actual_next_vel[i], 1)
+            #print("ve %s"%vid)
+            #print("setting speed=%s"%actual_next_vel[i])
+            self.traci_connection.vehicle.slowDown(vid, actual_next_vel[i], 100)
 
     def apply_lane_change(self, veh_ids, direction=None, target_lane=None):
         """
@@ -796,6 +805,7 @@ class SumoEnvironment(gym.Env, Serializable):
         veh_id: string
             vehicle identifier
         """
+        return
         speed_mode_id = 1
         if veh_id in self.rl_ids:
             speed_mode = self.sumo_params.rl_speed_mode
@@ -846,7 +856,7 @@ class SumoEnvironment(gym.Env, Serializable):
         else:
             logging.error("Invalid Speed Mode!!")
 
-        self.traci_connection.vehicle.setLaneChangeMode(veh_id, lc_mode_id)
+        #self.traci_connection.vehicle.setLaneChangeMode(veh_id, lc_mode_id)
 
     def get_x_by_id(self, veh_id):
         """
@@ -863,9 +873,11 @@ class SumoEnvironment(gym.Env, Serializable):
         float
             position of a vehicle relative to a certain reference.
         """
+
         if self.vehicles.get_edge(veh_id) == '':
             # occurs when a vehicle crashes is teleported for some other reason
             return 0.
+        #print (self.vehicles.get_edge(veh_id))
         return self.scenario.get_x(self.vehicles.get_edge(veh_id),
                                    self.vehicles.get_position(veh_id))
 
