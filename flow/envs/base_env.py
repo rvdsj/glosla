@@ -735,6 +735,9 @@ class SumoEnvironment(gym.Env, Serializable):
         ValueError
             If any of the direction values are not -1, 0, or 1.
         """
+
+
+        
         if direction is not None and target_lane is not None:
             raise ValueError("Cannot provide both a direction and target_lane.")
         elif direction is None and target_lane is None:
