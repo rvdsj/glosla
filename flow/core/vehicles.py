@@ -165,6 +165,9 @@ class Vehicles:
     def get_initial_speed(self, veh_id):
         return self.__vehicles[veh_id]["initial_speed"]
 
+    def get_no_rl_vehicles(self):
+        return self.num_rl_vehicles
+
     def get_speed(self, veh_id="all"):
         """
         Return the speed of the specified vehicle at the current time step.

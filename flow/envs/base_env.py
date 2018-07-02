@@ -343,7 +343,6 @@ class SumoEnvironment(gym.Env, Serializable):
                     new_lane = \
                         self.vehicles.get_lane_changing_controller(
                             veh_id).get_action(self)
-
                     self.apply_lane_change([veh_id], target_lane=[new_lane])
             self.apply_acceleration(self.controlled_ids, acc=accel)
 
@@ -736,8 +735,6 @@ class SumoEnvironment(gym.Env, Serializable):
             If any of the direction values are not -1, 0, or 1.
         """
 
-
-        
         if direction is not None and target_lane is not None:
             raise ValueError("Cannot provide both a direction and target_lane.")
         elif direction is None and target_lane is None:
@@ -759,9 +756,16 @@ class SumoEnvironment(gym.Env, Serializable):
                 raise ValueError("Direction values for lane changes may only "
                                  "be: -1, 0, or 1.")
 
+            #print("direction")
+            #print(direction)
+            #print("current")
+            #print(current_lane)
             target_lane = current_lane + np.array(direction)
+            #print("target")
+            #print(target_lane)
 
-        target_lane = np.clip(target_lane, 0, self.scenario.lanes - 1)
+        #change number of lanes here
+        target_lane = np.clip(target_lane, 0, 1)
 
         for i, vid in enumerate(veh_ids):
             if vid in self.rl_ids:

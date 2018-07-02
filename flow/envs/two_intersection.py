@@ -67,7 +67,7 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         distance_to_junction = Box(low=0, high=np.inf, shape=(1,))
         noOfFollowers = Box(low=0, high=np.inf, shape=(1,))
         noOfLeaders = Box(low=0, high=np.inf, shape=(1,))
-        return Tuple((speed, absolute_pos, distance_to_junction,lane))
+        return Tuple((speed, absolute_pos, distance_to_junction,lane,noOfFollowers,noOfLeaders))
 
     def apply_rl_actions(self, rl_actions):
         """
@@ -77,22 +77,11 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         acceleration = rl_actions[::2]
         direction = np.round(rl_actions[1::2])
 
+        #print("direction")
+        #print(direction)
+
         # re-arrange actions according to mapping in observation space
         sorted_rl_ids = [veh_id for veh_id in self.sorted_ids if veh_id in self.rl_ids]
-        # sorted_rl_ids = self.rl_ids
-
-        # represents vehicles that are allowed to change lanes
-        non_lane_changing_veh = \
-            [self.timer <= self.lane_change_duration + self.vehicles.get_state(veh_id, 'last_lc')
-             for veh_id in sorted_rl_ids]
-        # vehicle that are not allowed to change have their directions set to 0
-        direction[non_lane_changing_veh] = np.array([0] * sum(non_lane_changing_veh))
-
-        print("acceleration")
-        print (acceleration)
-        print("direction")
-        print(direction)
-
         self.apply_acceleration(sorted_rl_ids, acc=acceleration)
         self.apply_lane_change(sorted_rl_ids, direction=direction)
 
@@ -101,6 +90,12 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         """
         See parent class
         """
+
+        sorted_rl_ids = [veh_id for veh_id in self.sorted_ids if veh_id in self.rl_ids]
+
+        #for i, veh_id in enumerate(sorted_rl_ids):
+            #self.traci_connection.vehicle
+
         return rewards.desired_velocity(self, fail=kwargs["fail"])
 
     def get_state(self, **kwargs):
@@ -120,5 +115,5 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
             distanceToJunction[veh_id] = laneLenth - xPosition
 
         return np.array([[self.vehicles.get_speed(veh_id)/enter_speed,
-                          self.vehicles.get_absolute_position(veh_id)/length, distanceToJunction[veh_id],self.vehicles.get_lane(veh_id)]
+                          self.vehicles.get_absolute_position(veh_id)/length, distanceToJunction[veh_id],self.vehicles.get_lane(veh_id),0,0]
                          for veh_id in self.sorted_ids])
