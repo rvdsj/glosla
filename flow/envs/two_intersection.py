@@ -19,14 +19,6 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         Actions are a set of accelerations from 0 to 15m/s
         :return:
         """
-        # return Box(low=-np.abs(self.env_params.max_deacc),
-        #            high=self.env_params.max_acc,
-        #            shape=(self.vehicles.num_rl_vehicles, ))
-
-        #return Box(low=-np.abs(self.env_params.max_deacc),
-        #           high=self.env_params.max_acc,
-        #           shape=(1, ))
-
 
         max_deacc = self.env_params.max_deacc
         max_acc = self.env_params.max_acc
@@ -46,28 +38,12 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         See parent class
         An observation is an array the velocities for each vehicle
         """
-        # speed = Box(low=0, high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # absolute_pos = Box(low=0., high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # remaining_green_light = Box(low=0., high=90, shape=(self.vehicles.num_vehicles,))
-        # next_green_light = Box(low=0., high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # cycle = Box(low=0., high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # lane = Box(low=0, high=(2 - 1), shape=(self.vehicles.num_vehicles,))
-        # distance_to_junction = Box(low=0, high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # noOfFollowers = Box(low=0, high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # noOfLeaders = Box(low=0, high=np.inf, shape=(self.vehicles.num_vehicles,))
-        # # return Tuple((speed, absolute_pos,remeaining_green_light, next_green_light,cycle, lane,distance_to_junction,noOfFollowers,noOfLeaders))
-        # return Tuple((speed, absolute_pos))speed = Box(low=0, high=np.inf, shape=(self.vehicles.num_vehicles,))
 
         speed = Box(low=0, high=np.inf, shape=(1,))
         absolute_pos = Box(low=0., high=np.inf, shape=(1,))
-        remaining_green_light = Box(low=0., high=90, shape=(1,))
-        next_green_light = Box(low=0., high=np.inf, shape=(1,))
-        cycle = Box(low=0., high=np.inf, shape=(1,))
         lane = Box(low=0, high=(2 - 1), shape=(1,))
-        distance_to_junction = Box(low=0, high=np.inf, shape=(1,))
-        noOfFollowers = Box(low=0, high=np.inf, shape=(1,))
-        noOfLeaders = Box(low=0, high=np.inf, shape=(1,))
-        return Tuple((speed, absolute_pos, distance_to_junction,lane,noOfFollowers,noOfLeaders))
+
+        return Tuple((speed, absolute_pos,lane))
 
     def apply_rl_actions(self, rl_actions):
         """
@@ -76,9 +52,6 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
 
         acceleration = rl_actions[::2]
         direction = np.round(rl_actions[1::2])
-
-        #print("direction")
-        #print(direction)
 
         # re-arrange actions according to mapping in observation space
         sorted_rl_ids = [veh_id for veh_id in self.sorted_ids if veh_id in self.rl_ids]
@@ -92,9 +65,6 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
         """
 
         sorted_rl_ids = [veh_id for veh_id in self.sorted_ids if veh_id in self.rl_ids]
-
-        #for i, veh_id in enumerate(sorted_rl_ids):
-            #self.traci_connection.vehicle
 
         return rewards.desired_velocity(self, fail=kwargs["fail"])
 
@@ -115,5 +85,5 @@ class TwoIntersectionEnvironment(IntersectionEnvironment):
             distanceToJunction[veh_id] = laneLenth - xPosition
 
         return np.array([[self.vehicles.get_speed(veh_id)/enter_speed,
-                          self.vehicles.get_absolute_position(veh_id)/length, distanceToJunction[veh_id],self.vehicles.get_lane(veh_id),0,0]
+                          self.vehicles.get_absolute_position(veh_id)/length,self.vehicles.get_lane(veh_id)]
                          for veh_id in self.sorted_ids])
