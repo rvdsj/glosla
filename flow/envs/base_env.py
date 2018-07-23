@@ -748,8 +748,9 @@ class SumoEnvironment(gym.Env, Serializable):
                                  "be: -1, 0, or 1.")
 
             target_lane = current_lane + np.array(direction)
-
-        target_lane = np.clip(target_lane, 0, self.scenario.lanes - 1)
+        print("100000000000000000000000000000")
+        print(self.scenario.lanes)
+        target_lane = np.clip(target_lane, 0, (2 - 1))
 
         for i, vid in enumerate(veh_ids):
             if vid in self.rl_ids:

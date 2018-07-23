@@ -111,6 +111,6 @@ for seed in [1]: # [1, 5, 10, 73, 56]
         seed=seed,
         mode="local",
         exp_prefix="leah-test-exp",
-        python_command=flow_config.PYTHON_COMMAND
+        #python_command=flow_config.PYTHON_COMMAND
         # plot=True,
     )
