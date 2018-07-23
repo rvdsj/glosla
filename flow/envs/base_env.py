@@ -397,7 +397,10 @@ class SumoEnvironment(gym.Env, Serializable):
                 veh_id, network_observations[veh_id][tc.VAR_SPEED])
 
             try:
-                change = self.get_x_by_id(veh_id) - prev_pos
+                try:
+                    change = self.get_x_by_id(veh_id) - prev_pos
+                except:
+                    print(veh_id, prev_pos, self.vehicles.get_edge(veh_id), self.vehicles.get_position(veh_id))
                 if change < 0:
                     change += self.scenario.length
                 new_abs_pos = self.vehicles.get_absolute_position(
@@ -748,8 +751,7 @@ class SumoEnvironment(gym.Env, Serializable):
                                  "be: -1, 0, or 1.")
 
             target_lane = current_lane + np.array(direction)
-        print("100000000000000000000000000000")
-        print(self.scenario.lanes)
+
         target_lane = np.clip(target_lane, 0, (2 - 1))
 
         for i, vid in enumerate(veh_ids):
