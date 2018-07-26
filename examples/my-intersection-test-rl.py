@@ -36,7 +36,7 @@ from flow.scenarios.intersections.my_intersection_scenario import MyTwoWayInters
 from flow.scenarios.intersections.my_gen import MyTwoWayIntersectionGenerator
 from flow.controllers.rlcontroller import RLController
 from flow.controllers.routing_controllers import ContinuousRouter
-from rllab.policies.myMLPPolicy import myMLPPolicy
+#from rllab.policies.myMLPPolicy import myMLPPolicy
 
 logging.basicConfig(level=logging.INFO)
 
